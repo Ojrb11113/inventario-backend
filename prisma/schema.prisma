@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model compras {
+  id              Int               @id @default(autoincrement())
+  fecha           DateTime?         @default(now()) @db.Timestamp(6)
+  total           Decimal?          @default(0) @db.Decimal(5, 2)
+  tasa_cambio     Decimal?          @default(0) @db.Decimal(5, 2)
+  usuario_id      Int?
+  usuario         usuario?          @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  compras_detalle compras_detalle[]
+}
+
+model compras_detalle {
+  id          Int       @id @default(autoincrement())
+  cantidad    Int?      @default(0)
+  precio      Decimal?  @default(0) @db.Decimal(5, 2)
+  total       Decimal?  @default(0) @db.Decimal(5, 2)
+  compra_id   Int?
+  producto_id Int?
+  compras     compras?  @relation(fields: [compra_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  producto    producto? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model entrada {
+  id              Int               @id @default(autoincrement())
+  fecha           DateTime?         @default(now()) @db.Timestamp(6)
+  usuario_id      Int?
+  usuario         usuario?          @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  entrada_detalle entrada_detalle[]
+}
+
+model producto {
+  id              Int               @id @default(autoincrement())
+  nombre          String?           @db.VarChar
+  stock           Int?              @default(0)
+  price           Decimal?          @default(0) @db.Decimal(5, 2)
+  proveedor_id    Int?
+  compras_detalle compras_detalle[]
+  entrada_detalle entrada_detalle[]
+  proveedor       proveedor?        @relation(fields: [proveedor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model proveedor {
+  id        Int        @id @default(autoincrement())
+  nombre    String?    @db.VarChar(30)
+  rif       String?    @db.VarChar(20)
+  direccion String?    @db.VarChar(50)
+  telefono  String?    @db.VarChar(15)
+  email     String?    @db.VarChar
+  producto  producto[]
+}
+
+model entrada_detalle {
+  id                Int       @id @default(autoincrement())
+  cantidad          Int?      @default(0)
+  fecha_vencimiento DateTime? @db.Timestamp(6)
+  producto_id       Int?
+  entrada_id        Int?
+  entrada           entrada?  @relation(fields: [entrada_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  producto          producto? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model usuario {
+  id          Int        @id @default(autoincrement())
+  name        String?    @db.VarChar
+  password    String?    @db.VarChar
+  rol         roles?     @default(empleado)
+  empleado_id Int?
+  is_active   Boolean?   @default(true)
+  compras     compras[]
+  entrada     entrada[]
+  empleados   empleados? @relation(fields: [empleado_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model empleados {
+  id              Int       @id @default(autoincrement())
+  cedula          String?   @db.VarChar
+  direccion       String?   @db.VarChar
+  telf            String?   @db.VarChar
+  nombre_apellido String?   @db.VarChar
+  cargo           cargos?
+  is_active       Boolean?  @default(true)
+  usuario         usuario[]
+}
+
+enum roles {
+  empleado
+  administrador
+}
+
+enum cargos {
+  Cajero
+  Panadero
+}

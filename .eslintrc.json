@@ -1,0 +1,35 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "src/utils/logs/*.log",
+    "src/utils/logs/*.log.gz",
+    "src/utils/logs/*.json",
+    "**/*.html",
+    "**/*.png",
+    "**/*.jpg",
+    "**/*.gz",
+    "**/*.mp4",
+    "**/*.avif"
+  ],
+  "plugins": ["prettier"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["./tsconfig.json"],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "require-await": "error",
+        "linebreak-style": 0,
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "prettier/prettier": ["error", { "endOfLine": "auto" }]
+      }
+    }
+  ]
+}
