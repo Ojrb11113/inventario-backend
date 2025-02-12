@@ -24,17 +24,19 @@ export class ProductsService {
         );
       }
 
-      const proveedor = await this.prisma.proveedor.findFirst({
-        where: {
-          id: createProductDto.providerId
-        }
-      });
+      if (createProductDto.providerId) {
+        const proveedor = await this.prisma.proveedor.findFirst({
+          where: {
+            id: createProductDto.providerId
+          }
+        });
 
-      if (!proveedor) {
-        throw new HttpException(
-          'el id del proveedor no existe en la DB',
-          HttpStatus.BAD_REQUEST
-        );
+        if (!proveedor) {
+          throw new HttpException(
+            'el id del proveedor no existe en la DB',
+            HttpStatus.BAD_REQUEST
+          );
+        }
       }
 
       await this.prisma.producto.create({
