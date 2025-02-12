@@ -33,7 +33,7 @@ export class AuthController {
       path: '/',
       sameSite: process.env.nodeEnv === process.env.DEV_ENV ? 'lax' : 'none',
       secure: process.env.nodeEnv === process.env.DEV_ENV ? false : true,
-      maxAge: parseInt(process.env.FIVE_DAYS_IN_MS || '')
+      maxAge: parseInt(process.env.FIVE_DAYS_IN_MS)
     });
 
     return {
