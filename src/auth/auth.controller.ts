@@ -29,7 +29,11 @@ export class AuthController {
     const { access_token } = await this.authService.login(loginDto);
 
     res.cookie('token', access_token, {
-      httpOnly: true
+      httpOnly: true,
+      maxAge: 3600000,
+      secure: false,
+      sameSite: 'lax',
+      path: '/'
     });
 
     return {
