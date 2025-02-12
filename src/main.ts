@@ -7,7 +7,9 @@ import { AllExceptionFilter } from './common/utils/all-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    credentials: true
+  });
   app.use(cookieParser());
 
   const logger = new Logger('bootstrap');
