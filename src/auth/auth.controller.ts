@@ -50,4 +50,13 @@ export class AuthController {
       rol: user.rol
     };
   }
+
+  @Get('logout')
+  @Auth()
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('token');
+    return {
+      msg: 'session closed'
+    };
+  }
 }
