@@ -48,11 +48,14 @@ export class ProvidersService {
 
   async findOne(id: number) {
     try {
-      const provider = await this.prisma.producto.findUnique({
+      console.log(typeof id);
+      const provider = await this.prisma.proveedor.findFirst({
         where: {
-          id
+          id: id
         }
       });
+
+      console.log({ provider });
 
       if (!provider) {
         throw new HttpException(
